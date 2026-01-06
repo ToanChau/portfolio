@@ -1,0 +1,23 @@
+name: resource
+description: "Data Layer"
+version: 0.0.1
+publish_to: 'none'
+
+environment:
+  sdk: ^3.6.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_svg:
+  firebase_core:
+  intl:
+  lottie:
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+
+
+resolution: workspace

@@ -1,0 +1,15 @@
+name: domain
+environment:
+  sdk: ^3.6.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+  injectable:
+  get_it:
+  equatable:
+  flutter_bloc:
+  collection: 
+  dio:
+
+resolution: workspace

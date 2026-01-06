@@ -1,0 +1,35 @@
+name: shared
+description: "Shared codebase"
+version: 0.0.1
+publish_to: 'none'
+
+environment:
+  sdk: ^3.6.0
+  flutter: ">=1.17.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  equatable:
+  flutter_bloc:
+  responsive_framework:
+  go_router:
+  get_it:
+  shared_preferences:
+  rxdart:
+  domain:
+    path: ../domain
+  resource:
+    path: ../resource
+  timezone:
+  intl:
+
+  #Auth SNS
+  flutter_dotenv:
+  toastification:
+  url_launcher:
+
+  #Animation
+  video_player:
+  country_pickers:
+resolution: workspace

@@ -1,0 +1,76 @@
+name: portfolio
+description: "A new Flutter project."
+publish_to: 'none'
+version: 0.1.0+1
+
+environment:
+  sdk: ^3.11.0-128.0.dev
+
+dependencies:
+  flutter:
+    sdk: flutter
+  intl:
+  intl_utils:
+  flutter_svg:
+
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+  flutter_gen_runner:
+  build_runner: ^2.4.0
+  url_launcher: ^6.2.1
+
+flutter_gen:
+  output: resource/lib/src/gen/
+  line_length: 80
+
+  integrations:
+    image: true
+    flutter_svg: true
+
+flutter_intl:
+  enabled: true
+  class_name: S
+  arb_dir: resource/lib/src/l10n/
+  output_dir: resource/lib/src/gen/
+
+flutter:
+  uses-material-design: true
+  generate: true
+  assets:
+    - assets/png/
+    - assets/env/
+    - assets/svg/
+    - assets/gif/
+    - assets/lottie/
+  
+  fonts:
+    - family: SpaceGrotesk
+      fonts:
+        - asset: assets/font/SpaceGrotesk-Bold.ttf
+          weight: 700
+        - asset: assets/font/SpaceGrotesk-Medium.ttf
+          weight: 500
+        - asset: assets/font/SpaceGrotesk-Regular.ttf
+          weight: 400
+    - family: PlayfairDisplay
+      fonts:
+        - asset: assets/font/PlayfairDisplay-Bold.ttf
+          weight: 700
+        - asset: assets/font/PlayfairDisplay-Medium.ttf
+          weight: 500
+        - asset: assets/font/PlayfairDisplay-Regular.ttf
+          weight: 400
+    - family: MeowScript
+      fonts:
+        - asset: assets/font/MeowScript-Regular.ttf
+          weight: 400
+
+
+workspace:
+  - resource
+  - shared
+  - shared_lints
+  - domain
