@@ -27,7 +27,7 @@ My personal portfolio website built with Flutter.
 
 1. Clone the repository
 ```bash
-git clone https://github.com/yourusername/portfolio.git
+git clone https://github.com/ToanChau/Portfolio
 cd portfolio
 ```
 
@@ -67,12 +67,6 @@ assets/             # Images, fonts, icons
 ## Build Commands
 
 ```bash
-# Android
-flutter build apk --release
-
-# iOS
-flutter build ios --release
-
 # Web
 flutter build web --release
 ```
