@@ -38,14 +38,14 @@ class AboutContent extends StatelessWidget {
         Row(
           mainAxisAlignment: context.responsiveValue(fallback: MainAxisAlignment.center,desktop:MainAxisAlignment.start),
           spacing: context.gap48_40_24,
-          children: aboutAchievements.map((e) => AboutContentItem(title: e.title, subtitle: e.subtitle)).toList(),
+          children: aboutAchievements.map((e) => Flexible(child: AboutContentItem(title: e.title, subtitle: e.subtitle))).toList(),
         ).paddingOnly(bottom: context.gap24_16_12),
         Row(
           mainAxisAlignment: context.responsiveValue(fallback: MainAxisAlignment.center,desktop:MainAxisAlignment.start),
           spacing: context.gap24_16_12,
           children: [
-            Button(type: ButtonType.tonal, size: ButtonSize.lg,icon: Assets.svg.icRocket,content: "View Project",onPressed: onViewProjectTap,),
-            Button(type: ButtonType.outlined, size: ButtonSize.lg,icon: Assets.svg.icPaperPlane,content: "Get in Touch",onPressed: onGetInTouchTap,),
+            Flexible(child: Button(type: ButtonType.tonal, size: context.responsiveValue(fallback: ButtonSize.lg,mobileAndTablet: ButtonSize.xs) ,icon: Assets.svg.icRocket,content: "View Project",onPressed: onViewProjectTap,)),
+            Flexible(child: Button(type: ButtonType.outlined, size: context.responsiveValue(fallback: ButtonSize.lg,mobileAndTablet: ButtonSize.xs),icon: Assets.svg.icPaperPlane,content: "Get in Touch",onPressed: onGetInTouchTap,)),
           ],
         )
       ],

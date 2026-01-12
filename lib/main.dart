@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:portfolio/Home.dart';
 import 'package:shared/shared.dart';
@@ -13,21 +15,27 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        theme: AppTheme.darkTheme(),
-        debugShowCheckedModeBanner: false,
-        home: ResponsiveBreakpoints.builder(
-            child: Overlay(
-              initialEntries: [
-                OverlayEntry(
-                  builder: (context) => SelectionArea(child: Home()),
-                ),
-              ],
-            ),
-            breakpoints: [
-              ScreenConstant.mobileBreakPoints,
-              ScreenConstant.tabletBreakPoints,
-              ScreenConstant.desktopBreakPoints,
-            ]
-        ));
+      scrollBehavior: const MaterialScrollBehavior().copyWith(
+        dragDevices: {
+          PointerDeviceKind.mouse,
+          PointerDeviceKind.touch,
+          PointerDeviceKind.stylus,
+          PointerDeviceKind.unknown,
+          PointerDeviceKind.trackpad,
+        },
+      ),
+      theme: AppTheme.darkTheme(),
+      debugShowCheckedModeBanner: false,
+      home: ResponsiveBreakpoints.builder(
+        child: Overlay(
+          initialEntries: [OverlayEntry(builder: (context) => SelectionArea(child: Home()))],
+        ),
+        breakpoints: [
+          ScreenConstant.mobileBreakPoints,
+          ScreenConstant.tabletBreakPoints,
+          ScreenConstant.desktopBreakPoints,
+        ],
+      ),
+    );
   }
 }

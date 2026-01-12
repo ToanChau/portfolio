@@ -76,10 +76,12 @@ class _ButtonState extends State<Button> {
                     ),
                   ),
                 if (!widget.iconOnly)
-                  (widget.content ?? "").typo({
-                    context.paragraph2Semibold,
-                    Typo.color(contentColor),
-                  }).marginOnly(left: !widget.iconOnly ? 12.0 : 0.0),
+                  Flexible(
+                    child: (widget.content ?? "").typo({
+                      context.paragraph2Semibold,
+                      Typo.color(contentColor),
+                    }).marginOnly(left: !widget.iconOnly ? 12.0 : 0.0),
+                  ),
               ],
             ),
           ),

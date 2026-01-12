@@ -233,58 +233,7 @@ class TechStack extends StatelessWidget {
   }
 }
 
-/// Responsive Tech Stack - tự động điều chỉnh layout dựa trên screen size
-class ResponsiveTechStack extends StatelessWidget {
-  final List<TechTagData> technologies;
-  final String? title;
-  final Color? hoverColor;
-  final Color? titleColor;
 
-  const ResponsiveTechStack({
-    super.key,
-    required this.technologies,
-    this.title,
-    this.hoverColor,
-    this.titleColor,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-
-    // Điều chỉnh spacing dựa trên screen size
-    double spacing = 12;
-    double tagFontSize = 13;
-    double tagIconSize = 16;
-    EdgeInsets tagPadding = const EdgeInsets.symmetric(horizontal: 12, vertical: 8);
-
-    if (screenWidth < 480) {
-      spacing = 8;
-      tagFontSize = 12;
-      tagIconSize = 14;
-      tagPadding = const EdgeInsets.symmetric(horizontal: 10, vertical: 6);
-    } else if (screenWidth < 768) {
-      spacing = 10;
-      tagFontSize = 12;
-      tagIconSize = 15;
-      tagPadding = const EdgeInsets.symmetric(horizontal: 11, vertical: 7);
-    }
-
-    return TechStack(
-      technologies: technologies,
-      title: title,
-      spacing: spacing,
-      runSpacing: spacing,
-      hoverColor: hoverColor,
-      titleColor: titleColor,
-      tagFontSize: tagFontSize,
-      tagIconSize: tagIconSize,
-      tagPadding: tagPadding,
-    );
-  }
-}
-
-/// Tech Container Widget - bao ngoài danh sách công nghệ
 class TechContainer extends StatefulWidget {
   final List<TechTagData> technologies;
   final String? title;
@@ -447,64 +396,7 @@ class _TechContainerState extends State<TechContainer> {
   }
 }
 
-/// Responsive Tech Container - tự động điều chỉnh layout
-class ResponsiveTechContainer extends StatelessWidget {
-  final List<TechTagData> technologies;
-  final String? title;
-  final SvgGenImage? icon;
-  final Color? hoverColor;
-  final Color? titleColor;
 
-  const ResponsiveTechContainer({
-    super.key,
-    required this.technologies,
-    this.title,
-    this.icon,
-    this.hoverColor,
-    this.titleColor,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-
-    double padding = 24;
-    double spacing = 12;
-    double titleFontSize = 18;
-    double tagFontSize = 13;
-    double tagIconSize = 16;
-
-    if (screenWidth < 480) {
-      padding = 16;
-      spacing = 8;
-      titleFontSize = 16;
-      tagFontSize = 12;
-      tagIconSize = 14;
-    } else if (screenWidth < 768) {
-      padding = 20;
-      spacing = 10;
-      titleFontSize = 17;
-      tagFontSize = 12;
-      tagIconSize = 15;
-    }
-
-    return TechContainer(
-      technologies: technologies,
-      title: title,
-      icon: icon,
-      hoverColor: hoverColor,
-      titleColor: titleColor,
-      padding: EdgeInsets.all(padding),
-      spacing: spacing,
-      runSpacing: spacing,
-      titleFontSize: titleFontSize,
-      tagFontSize: tagFontSize,
-      tagIconSize: tagIconSize,
-    );
-  }
-}
-
-/// Grid layout cho nhiều Tech Containers
 class TechContainerGrid extends StatelessWidget {
   final List<({
   String? title,
@@ -550,12 +442,14 @@ class TechContainerGrid extends StatelessWidget {
       itemCount: containers.length,
       itemBuilder: (context, index) {
         final container = containers[index];
-        return TechContainer(
-          title: container.title,
-          icon: container.icon,
-          technologies: container.technologies,
-          hoverColor: hoverColor,
-          titleColor: titleColor,
+        return IntrinsicHeight(
+          child: TechContainer(
+            title: container.title,
+            icon: container.icon,
+            technologies: container.technologies,
+            hoverColor: hoverColor,
+            titleColor: titleColor,
+          ),
         );
       },
     );

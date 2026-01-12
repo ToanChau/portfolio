@@ -43,7 +43,7 @@ class AboutSectionPage extends StatelessWidget {
       ],
     );
     return Container(
-      padding: EdgeInsets.symmetric(vertical: context.padding48_32_24, horizontal: context.padding256_32_16),
+      padding: EdgeInsets.symmetric(vertical: context.padding48_32_24, horizontal: context.padding128_32_16),
       child: ResponsiveWidget(
         onCheckAutoLayout: (constrain)=>constrain.maxWidth<850,
         tablet: mobile,

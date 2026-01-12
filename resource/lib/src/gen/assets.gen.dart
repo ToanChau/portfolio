@@ -63,6 +63,13 @@ class $AssetsPngGen {
 class $AssetsSvgGen {
   const $AssetsSvgGen();
 
+  /// File path: assets/svg/ic_androidstudio.svg
+  SvgGenImage get icAndroidstudio =>
+      const SvgGenImage('assets/svg/ic_androidstudio.svg');
+
+  /// File path: assets/svg/ic_api.svg
+  SvgGenImage get icApi => const SvgGenImage('assets/svg/ic_api.svg');
+
   /// File path: assets/svg/ic_back_arrow.svg
   SvgGenImage get icBackArrow =>
       const SvgGenImage('assets/svg/ic_back_arrow.svg');
@@ -73,11 +80,26 @@ class $AssetsSvgGen {
   /// File path: assets/svg/ic_dart.svg
   SvgGenImage get icDart => const SvgGenImage('assets/svg/ic_dart.svg');
 
+  /// File path: assets/svg/ic_data.svg
+  SvgGenImage get icData => const SvgGenImage('assets/svg/ic_data.svg');
+
+  /// File path: assets/svg/ic_docker.svg
+  SvgGenImage get icDocker => const SvgGenImage('assets/svg/ic_docker.svg');
+
+  /// File path: assets/svg/ic_figma.svg
+  SvgGenImage get icFigma => const SvgGenImage('assets/svg/ic_figma.svg');
+
   /// File path: assets/svg/ic_firebase.svg
   SvgGenImage get icFirebase => const SvgGenImage('assets/svg/ic_firebase.svg');
 
+  /// File path: assets/svg/ic_flask.svg
+  SvgGenImage get icFlask => const SvgGenImage('assets/svg/ic_flask.svg');
+
   /// File path: assets/svg/ic_flutter.svg
   SvgGenImage get icFlutter => const SvgGenImage('assets/svg/ic_flutter.svg');
+
+  /// File path: assets/svg/ic_git.svg
+  SvgGenImage get icGit => const SvgGenImage('assets/svg/ic_git.svg');
 
   /// File path: assets/svg/ic_github.svg
   SvgGenImage get icGithub => const SvgGenImage('assets/svg/ic_github.svg');
@@ -105,6 +127,9 @@ class $AssetsSvgGen {
   /// File path: assets/svg/ic_phone.svg
   SvgGenImage get icPhone => const SvgGenImage('assets/svg/ic_phone.svg');
 
+  /// File path: assets/svg/ic_postman.svg
+  SvgGenImage get icPostman => const SvgGenImage('assets/svg/ic_postman.svg');
+
   /// File path: assets/svg/ic_python.svg
   SvgGenImage get icPython => const SvgGenImage('assets/svg/ic_python.svg');
 
@@ -114,13 +139,29 @@ class $AssetsSvgGen {
   /// File path: assets/svg/ic_rocket.svg
   SvgGenImage get icRocket => const SvgGenImage('assets/svg/ic_rocket.svg');
 
+  /// File path: assets/svg/ic_scrum.svg
+  SvgGenImage get icScrum => const SvgGenImage('assets/svg/ic_scrum.svg');
+
+  /// File path: assets/svg/ic_sqlite.svg
+  SvgGenImage get icSqlite => const SvgGenImage('assets/svg/ic_sqlite.svg');
+
+  /// File path: assets/svg/ic_vscode.svg
+  SvgGenImage get icVscode => const SvgGenImage('assets/svg/ic_vscode.svg');
+
   /// List of all assets
   List<SvgGenImage> get values => [
+    icAndroidstudio,
+    icApi,
     icBackArrow,
     icCoupon,
     icDart,
+    icData,
+    icDocker,
+    icFigma,
     icFirebase,
+    icFlask,
     icFlutter,
+    icGit,
     icGithub,
     icHome,
     icLocation,
@@ -129,9 +170,13 @@ class $AssetsSvgGen {
     icNotification,
     icPaperPlane,
     icPhone,
+    icPostman,
     icPython,
     icQrNoti,
     icRocket,
+    icScrum,
+    icSqlite,
+    icVscode,
   ];
 }
 

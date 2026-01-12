@@ -8,18 +8,9 @@ class SkillSectionPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final mobileTechs = [
-      TechTagData(
-        label: 'Flutter',
-        // icon: Assets.icons.flutter,
-      ),
-      TechTagData(
-        label: 'Dart',
-        // icon: Assets.icons.dart,
-      ),
-      TechTagData(
-        label: 'BLoC',
-        // icon: Assets.icons.bloc,
-      ),
+      TechTagData(label: 'Flutter', icon: Assets.svg.icFlutter),
+      TechTagData(label: 'Dart', icon: Assets.svg.icDart),
+      TechTagData(label: 'BLoC', icon: Assets.svg.icDart),
       TechTagData(
         label: 'Clean Architecture',
         // icon: Assets.icons.getx,
@@ -30,52 +21,22 @@ class SkillSectionPage extends StatelessWidget {
       ),
     ];
     final backendTechs = [
-      TechTagData(
-        label: 'Firebase',
-        // icon: Assets.icons.firebase,
-      ),
-      TechTagData(
-        label: 'SQLite',
-        // icon: Assets.icons.sqlite,
-      ),
-      TechTagData(
-        label: 'REST API',
-        // icon: Assets.icons.nodejs,
-      ),
+      TechTagData(label: 'Firebase', icon: Assets.svg.icFirebase),
+      TechTagData(label: 'SQLite', icon: Assets.svg.icSqlite),
+      TechTagData(label: 'REST API', icon: Assets.svg.icApi),
       TechTagData(
         label: 'Hive',
         // icon: Assets.icons.express,
       ),
-      TechTagData(
-        label: 'Flask',
-        // icon: Assets.icons.express,
-      ),
+      TechTagData(label: 'Flask', icon: Assets.svg.icFlask),
     ];
     final tools = [
-      TechTagData(
-        label: 'Git',
-        // icon: Assets.icons.react,
-      ),
-      TechTagData(
-        label: 'Docker',
-        // icon: Assets.icons.typescript,
-      ),
-      TechTagData(
-        label: 'Figma',
-        // icon: Assets.icons.tailwind,
-      ),
-      TechTagData(
-        label: 'VS Code',
-        // icon: Assets.icons.nextjs,
-      ),
-      TechTagData(
-        label: 'Postman',
-        // icon: Assets.icons.nextjs,
-      ),
-      TechTagData(
-        label: 'Android Studio',
-        // icon: Assets.icons.nextjs,
-      ),
+      TechTagData(label: 'Git', icon: Assets.svg.icGit),
+      TechTagData(label: 'Docker', icon: Assets.svg.icDocker),
+      TechTagData(label: 'Figma', icon: Assets.svg.icFigma),
+      TechTagData(label: 'VS Code', icon: Assets.svg.icVscode),
+      TechTagData(label: 'Postman', icon: Assets.svg.icPostman),
+      TechTagData(label: 'Android Studio', icon: Assets.svg.icAndroidstudio),
     ];
     final soft = [
       TechTagData(
@@ -86,12 +47,71 @@ class SkillSectionPage extends StatelessWidget {
         label: 'Communication',
         // icon: Assets.icons.typescript,
       ),
-      TechTagData(
-        label: 'Agile/Scrum',
-        // icon: Assets.icons.tailwind,
-      ),
-
+      TechTagData(label: 'Agile/Scrum', icon: Assets.svg.icScrum),
     ];
+    final mobileContainer = TechContainer(
+
+      title: "Mobile Development",
+      icon: Assets.svg.icMobile,
+      technologies: mobileTechs.map((e) => e).toList(),
+    );
+    final backendContainer = TechContainer(
+      hoverColor: const Color(0xFF21CF41),
+      title: "Backend Development",
+      icon: Assets.svg.icData,
+      technologies: backendTechs.map((e) => e).toList(),
+    );
+    final toolAndDevOps = TechContainer(
+      hoverColor: const Color(0xFFF46936),
+
+      title: "Tools & DevOps",
+      icon: Assets.svg.icDocker,
+      technologies: tools.map((e) => e).toList(),
+    );
+    final softSkills = TechContainer(
+      hoverColor: const Color(0xFF8D37C6),
+      title: "Soft Skills",
+      icon: Assets.svg.icNotification,
+      technologies: soft.map((e) => e).toList(),
+    );
+    final tablet = IntrinsicHeight(
+      child: Row(
+        spacing: context.gap24_16_12,
+        children: [
+          Expanded(
+            child: Column(
+              spacing: context.gap24_16_12,
+              children: [
+                Flexible(child: mobileContainer),
+                Flexible(child: backendContainer),
+              ],
+            ),
+          ),
+          Expanded(
+            child: Column(
+              spacing: context.gap24_16_12,
+              children: [
+                Flexible(child: toolAndDevOps),
+                Flexible(child: softSkills),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+    final desktop = IntrinsicHeight(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        mainAxisSize: MainAxisSize.max,
+        spacing: context.gap24_16_12,
+        children: [
+          Expanded(child: mobileContainer),
+          Expanded(child: backendContainer),
+          Expanded(child: toolAndDevOps),
+          Expanded(child: softSkills),
+        ],
+      ),
+    );
 
     return Container(
       padding: EdgeInsets.symmetric(vertical: context.padding48_32_24, horizontal: context.padding128_80_64),
@@ -105,17 +125,17 @@ class SkillSectionPage extends StatelessWidget {
           "Technologies and tools I work with"
               .typo({context.heading6Light, Typo.color(context.color.neutral.text.quaternary)})
               .marginOnly(bottom: context.gap80_64_40),
-          TechContainerGrid(
-            containers: [
-              (title: 'Mobile Development', icon: Assets.svg.icMobile, technologies: mobileTechs),
-              (title: 'Backend & Database', icon: Assets.svg.icFirebase, technologies: backendTechs),
-              (title: 'Tools & DevOps', icon: Assets.svg.icGithub, technologies: tools),
-              (title: 'Soft Skills', icon: Assets.svg.icNotification, technologies: soft),
-            ],
-            crossAxisCount: 4,
-            spacing: context.gap24_16_12,
-            hoverColor: const Color(0xFF06B6D4),
-            titleColor: Colors.white,
+          ResponsiveWidget(
+            onCheckAutoLayout: (constrain) => constrain.maxWidth < 825,
+            mobile: Column(
+              spacing: context.gap24_16_12,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [mobileContainer, backendContainer, toolAndDevOps, softSkills],
+            ),
+
+            tablet: tablet,
+
+            desktop: desktop,
           ),
         ],
       ),

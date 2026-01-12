@@ -9,7 +9,7 @@ class AboutDetailPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(vertical: context.padding48_32_24, horizontal: context.padding128_80_64),
+      padding: EdgeInsets.symmetric(vertical: context.padding48_32_24, horizontal: context.padding128_32_16),
       child: Column(
         children: [
           SectionTag(text: "About Me").marginOnly(bottom: context.gap12_04_04),

@@ -174,7 +174,6 @@ class _ProjectCardState extends State<ProjectCard> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Badge + Title
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -202,13 +201,15 @@ class _ProjectCardState extends State<ProjectCard> {
                                 color: widget.badgeColor ?? defaultHoverColor,
                               ),
                               const SizedBox(width: 4),
-                              Text(
-                                widget.badge!,
-                                style: TextStyle(
-                                  color:
-                                  widget.badgeColor ?? defaultHoverColor,
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.w600,
+                              Flexible(
+                                child: Text(
+                                  widget.badge!,
+                                  style: TextStyle(
+                                    color:
+                                    widget.badgeColor ?? defaultHoverColor,
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.w600,
+                                  ),
                                 ),
                               ),
                             ],
@@ -280,7 +281,7 @@ class _ProjectCardState extends State<ProjectCard> {
                   // Actions
                   Row(
                     children: widget.actions.map((action) {
-                      return _buildActionButton(action, defaultHoverColor);
+                      return Flexible(child: _buildActionButton(action, defaultHoverColor));
                     }).toList(),
                   ),
                 ],
@@ -431,22 +432,26 @@ class _ActionButtonState extends State<_ActionButton> {
             mainAxisSize: MainAxisSize.min,
             children: [
               if (widget.icon != null) ...[
-                widget.icon!.svg(
-                  width: 16,
-                  height: 16,
-                  colorFilter: ColorFilter.mode(
-                    widget.textColor ?? defaultTextColor,
-                    BlendMode.srcIn,
+                Flexible(
+                  child: widget.icon!.svg(
+                    width: 16,
+                    height: 16,
+                    colorFilter: ColorFilter.mode(
+                      widget.textColor ?? defaultTextColor,
+                      BlendMode.srcIn,
+                    ),
                   ),
                 ),
                 const SizedBox(width: 6),
               ],
-              Text(
-                widget.label,
-                style: TextStyle(
-                  color: widget.textColor ?? defaultTextColor,
-                  fontSize: 13,
-                  fontWeight: FontWeight.w600,
+              Flexible(
+                child: Text(
+                  widget.label,
+                  style: TextStyle(
+                    color: widget.textColor ?? defaultTextColor,
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ),
             ],

@@ -17,7 +17,6 @@ class InfoItemData {
   });
 }
 
-/// Info Item Widget - hiển thị thông tin liên hệ với icon và link
 class InfoItem extends StatefulWidget {
   final SvgGenImage? icon;
   final String label;
@@ -120,18 +119,20 @@ class _InfoItemState extends State<InfoItem> {
                 ),
 
               SizedBox(width: widget.spacing),
-
               // Label
-              AnimatedDefaultTextStyle(
-                duration: const Duration(milliseconds: 200),
-                style: TextStyle(
-                  color: _isHovered ? (widget.hoverColor ?? defaultHoverColor) : (widget.textColor ?? defaultTextColor),
-                  fontSize: widget.fontSize,
-                  fontWeight: FontWeight.w400,
-                  decoration: _isHovered && hasAction ? TextDecoration.underline : TextDecoration.none,
-                  decorationColor: widget.hoverColor ?? defaultHoverColor,
+              Expanded(
+                child: AnimatedDefaultTextStyle(
+                  duration: const Duration(milliseconds: 200),
+                  style: TextStyle(
+                    overflow: TextOverflow.ellipsis,
+                    color: _isHovered ? (widget.hoverColor ?? defaultHoverColor) : (widget.textColor ?? defaultTextColor),
+                    fontSize: widget.fontSize,
+                    fontWeight: FontWeight.w400,
+                    decoration: _isHovered && hasAction ? TextDecoration.underline : TextDecoration.none,
+                    decorationColor: widget.hoverColor ?? defaultHoverColor,
+                  ),
+                  child: Text(widget.label),
                 ),
-                child: Text(widget.label),
               ),
             ],
           ),

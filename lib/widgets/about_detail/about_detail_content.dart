@@ -24,7 +24,8 @@ class AboutDetailContent extends StatelessWidget {
 class InfoGroup extends StatelessWidget {
   const InfoGroup({super.key});
 
-  @override  Widget build(BuildContext context) {
+  @override
+  Widget build(BuildContext context) {
     final infoItems = [
       InfoItem(
         label: "Tan Phu, Ho Chi Minh City, Vietnam",
@@ -32,14 +33,14 @@ class InfoGroup extends StatelessWidget {
         link: "https://maps.app.goo.gl/2q1i7N4U2rPJSU6x9",
       ),
       InfoItem(label: "+84 941 544 797", icon: Assets.svg.icPhone, link: "tel:0941544797"),
-      InfoItem(label: "chauductoan@email.com", icon: Assets.svg.icMail, link: "mailto:toanpl060@gmail.com"),
+      InfoItem(label: "toanpl060@gmail.com", icon: Assets.svg.icMail, link: "mailto:toanpl060@gmail.com"),
       InfoItem(label: "github.com/ToanChau", icon: Assets.svg.icGithub, link: "https://github.com/ToanChau"),
     ];
     final mobile = Column(
       spacing: context.gap24_16_12,
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: infoItems.map((e) => Expanded(child: e)).toList(),
+      children: infoItems.map((e) => e).toList(),
     );
     final desktop = Row(
       spacing: context.gap24_16_12,
@@ -66,8 +67,7 @@ class InfoGroup extends StatelessWidget {
       mobile: mobile,
       tablet: desktop,
       onCheckAutoLayout: (constrain) {
-        print(constrain);
-        return constrain.maxWidth < 600 && constrain.maxWidth>588 ;
+        return constrain.maxWidth < 600 ;
       },
       desktop: desktop,
     );

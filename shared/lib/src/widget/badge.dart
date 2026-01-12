@@ -78,7 +78,7 @@ class _StatusBadgeState extends State<StatusBadge>
                 ),
                 const SizedBox(width: 8),
               ],
-              widget.text.typo({context.caption1Light,Typo.color(brandColor)})
+              Flexible(child: widget.text.typo({context.caption1Light,Typo.color(brandColor)}))
 
             ],
           ),
