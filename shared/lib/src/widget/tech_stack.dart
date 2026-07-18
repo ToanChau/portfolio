@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:resource/resource.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../theme/brutal.dart';
+import '../theme/design_mode.dart';
+import 'tilt_card.dart';
+
 /// Data class cho Tech Tag
 class TechTagData {
   final String label;
@@ -101,11 +105,20 @@ class _TechTagState extends State<TechTag> {
 
   @override
   Widget build(BuildContext context) {
+    final isBrutal = context.isBrutal;
     final hasAction = widget.link != null || widget.onTap != null;
-    final defaultBgColor = const Color(0xFF2A3038);
-    final defaultTextColor = Colors.white.withOpacity(0.8);
-    final defaultBorderColor = const Color(0xFF414651);
-    final defaultHoverColor = const Color(0xFF06B6D4);
+
+    final defaultBgColor = widget.backgroundColor ?? (isBrutal ? BrutalColors.paper : const Color(0xFF2A3038));
+    final defaultTextColor =
+        widget.textColor ?? (isBrutal ? BrutalColors.ink : Colors.white.withOpacity(0.8));
+    final defaultBorderColor = widget.borderColor ?? const Color(0xFF414651);
+    final hoverColor = widget.hoverColor ?? (isBrutal ? BrutalColors.yellow : const Color(0xFF06B6D4));
+
+    // Classic: hover đổi màu chữ/viền sang cyan. Brutal: hover đổi nền —
+    // nhưng chỉ khi tag thật sự bấm được, hover giả trên item tĩnh khiến
+    // người dùng tưởng là link.
+    final showHover = _isHovered && (hasAction || !isBrutal);
+    final contentColor = !isBrutal && showHover ? hoverColor : defaultTextColor;
 
     return MouseRegion(
       onEnter: (_) => setState(() => _isHovered = true),
@@ -116,16 +129,20 @@ class _TechTagState extends State<TechTag> {
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 200),
           padding: widget.padding,
-          decoration: BoxDecoration(
-            color: _isHovered
-                ? (widget.hoverColor ?? defaultHoverColor).withOpacity(0.15)
-                : (widget.backgroundColor ?? defaultBgColor),
-            border: Border.all(
-              color: _isHovered ? (widget.hoverColor ?? defaultHoverColor) : (widget.borderColor ?? defaultBorderColor),
-              width: 1,
-            ),
-            borderRadius: BorderRadius.circular(widget.borderRadius),
-          ),
+          decoration: isBrutal
+              ? BrutalDecoration.flatChip(
+                  color: showHover ? hoverColor : defaultBgColor,
+                  borderWidth: 2,
+                  radius: widget.borderRadius,
+                )
+              : BoxDecoration(
+                  color: showHover ? hoverColor.withOpacity(0.15) : defaultBgColor,
+                  border: Border.all(
+                    color: showHover ? hoverColor : defaultBorderColor,
+                    width: 1,
+                  ),
+                  borderRadius: BorderRadius.circular(widget.borderRadius),
+                ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -134,23 +151,24 @@ class _TechTagState extends State<TechTag> {
                 widget.icon!.svg(
                   width: widget.iconSize,
                   height: widget.iconSize,
-                  colorFilter: ColorFilter.mode(
-                    _isHovered ? (widget.hoverColor ?? defaultHoverColor) : (widget.textColor ?? defaultTextColor),
-                    BlendMode.srcIn,
-                  ),
+                  colorFilter: ColorFilter.mode(contentColor, BlendMode.srcIn),
                 ),
                 const SizedBox(width: 8),
               ],
 
-              // Label
-              AnimatedDefaultTextStyle(
-                duration: const Duration(milliseconds: 200),
-                style: TextStyle(
-                  color: _isHovered ? (widget.hoverColor ?? defaultHoverColor) : (widget.textColor ?? defaultTextColor),
-                  fontSize: widget.fontSize,
-                  fontWeight: FontWeight.w500,
+              // Label. Flexible + ellipsis: a Wrap hands each tag the full line
+              // width, so a long label ("Clean Architecture") would otherwise
+              // overflow the row once the column gets narrow.
+              Flexible(
+                child: AnimatedDefaultTextStyle(
+                  duration: const Duration(milliseconds: 200),
+                  style: TextStyle(
+                    color: contentColor,
+                    fontSize: widget.fontSize,
+                    fontWeight: isBrutal ? FontWeight.w600 : FontWeight.w500,
+                  ),
+                  child: Text(widget.label, maxLines: 1, overflow: TextOverflow.ellipsis),
                 ),
-                child: Text(widget.label),
               ),
             ],
           ),
@@ -203,9 +221,9 @@ class TechStack extends StatelessWidget {
           Text(
             title!,
             style: TextStyle(
-              color: titleColor ?? Colors.white,
+              color: titleColor ?? BrutalColors.ink,
               fontSize: titleFontSize,
-              fontWeight: FontWeight.w600,
+              fontWeight: FontWeight.w700,
             ),
           ),
           const SizedBox(height: 12),
@@ -283,95 +301,117 @@ class _TechContainerState extends State<TechContainer> {
 
   @override
   Widget build(BuildContext context) {
-    final defaultBgColor = const Color(0xFF1A1F28);
-    final defaultBorderColor = const Color(0xFF414651);
-    final defaultTitleColor = Colors.white;
-    final defaultHoverColor = const Color(0xFF06B6D4);
+    final isBrutal = context.isBrutal;
+    final defaultTitleColor = isBrutal ? BrutalColors.ink : Colors.white;
+    final accentColor = widget.hoverColor ?? (isBrutal ? BrutalColors.yellow : const Color(0xFF06B6D4));
+    final lifted = _isHovered && widget.showHoverEffect;
 
-    return MouseRegion(
+    Widget card = MouseRegion(
       onEnter: (_) {
         setState(() => _isHovered = true);
         widget.onHover?.call();
       },
       onExit: (_) => setState(() => _isHovered = false),
       child: AnimatedContainer(
-        duration: const Duration(milliseconds: 300),
-        decoration: BoxDecoration(
-          color: widget.backgroundColor ?? defaultBgColor,
-          border: Border.all(
-            color: _isHovered && widget.showHoverEffect
-                ? (widget.hoverColor ?? defaultHoverColor)
-                : (widget.borderColor ?? defaultBorderColor),
-            width: widget.borderWidth,
-          ),
-          borderRadius: BorderRadius.circular(widget.borderRadius),
-          boxShadow: _isHovered && widget.showHoverEffect
-              ? [
-            BoxShadow(
-              color: (widget.hoverColor ?? defaultHoverColor)
-                  .withOpacity(0.2),
-              blurRadius: 20,
-              offset: const Offset(0, 8),
-            ),
-          ]
-              : [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.2),
-              blurRadius: 10,
-              offset: const Offset(0, 4),
-            ),
-          ],
-        ),
+        duration: Duration(milliseconds: isBrutal ? 150 : 300),
+        curve: Curves.easeOut,
+        transform: Matrix4.translationValues(
+            isBrutal && lifted ? -3 : 0, isBrutal && lifted ? -3 : 0, 0),
+        decoration: isBrutal
+            ? BrutalDecoration.card(
+                color: widget.backgroundColor ?? BrutalColors.paper,
+                borderWidth: 3,
+                radius: widget.borderRadius,
+                shadowOffset: lifted ? const Offset(9, 9) : const Offset(6, 6),
+              )
+            : BoxDecoration(
+                color: widget.backgroundColor ?? const Color(0xFF1A1F28),
+                border: Border.all(
+                  color: lifted ? accentColor : (widget.borderColor ?? const Color(0xFF414651)),
+                  width: widget.borderWidth,
+                ),
+                borderRadius: BorderRadius.circular(widget.borderRadius),
+                boxShadow: lifted
+                    ? [
+                        BoxShadow(
+                          color: accentColor.withOpacity(0.3),
+                          blurRadius: 32,
+                          spreadRadius: -4,
+                          offset: const Offset(0, 14),
+                        ),
+                      ]
+                    : [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.2),
+                          blurRadius: 10,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
+              ),
         padding: widget.padding,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Header with icon and title
+            // Header with icon and title.
+            //
+            // The icon is a fixed 48px box, so below roughly 64px of content
+            // width the Expanded title collapses to zero and the icon alone
+            // overflows the row. Drop the icon rather than overflow, and cap
+            // the title so a narrow column wraps it instead of laying it out
+            // one character per line.
             if (widget.title != null || widget.icon != null) ...[
-              Row(
-                children: [
-                  // Icon
-                  if (widget.icon != null) ...[
-                    Container(
-                      width: 48,
-                      height: 48,
-                      decoration: BoxDecoration(
-                        color: (widget.hoverColor ?? defaultHoverColor)
-                            .withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(
-                          color: (widget.hoverColor ?? defaultHoverColor)
-                              .withOpacity(0.3),
-                          width: 1,
-                        ),
-                      ),
-                      child: Center(
-                        child: widget.icon!.svg(
-                          width: 28,
-                          height: 28,
-                          colorFilter: ColorFilter.mode(
-                            widget.hoverColor ?? defaultHoverColor,
-                            BlendMode.srcIn,
+              LayoutBuilder(
+                builder: (context, constraints) {
+                  final hasRoomForIcon = widget.icon != null && constraints.maxWidth >= 120;
+
+                  return Row(
+                    children: [
+                      if (hasRoomForIcon) ...[
+                        Container(
+                          width: 48,
+                          height: 48,
+                          decoration: isBrutal
+                              ? BrutalDecoration.flatChip(
+                                  color: accentColor,
+                                  borderWidth: 2,
+                                  radius: 12,
+                                )
+                              : BoxDecoration(
+                                  color: accentColor.withOpacity(0.1),
+                                  borderRadius: BorderRadius.circular(12),
+                                  border: Border.all(color: accentColor.withOpacity(0.3), width: 1),
+                                ),
+                          child: Center(
+                            child: widget.icon!.svg(
+                              width: 28,
+                              height: 28,
+                              colorFilter: ColorFilter.mode(
+                                isBrutal ? BrutalColors.ink : accentColor,
+                                BlendMode.srcIn,
+                              ),
+                            ),
                           ),
                         ),
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                  ],
+                        const SizedBox(width: 16),
+                      ],
 
-                  // Title
-                  if (widget.title != null)
-                    Expanded(
-                      child: Text(
-                        widget.title!,
-                        style: TextStyle(
-                          color: widget.titleColor ?? defaultTitleColor,
-                          fontSize: widget.titleFontSize,
-                          fontWeight: FontWeight.w600,
+                      // Title
+                      if (widget.title != null)
+                        Expanded(
+                          child: Text(
+                            widget.title!,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              color: widget.titleColor ?? defaultTitleColor,
+                              fontSize: widget.titleFontSize,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                ],
+                    ],
+                  );
+                },
               ),
               const SizedBox(height: 20),
             ],
@@ -393,6 +433,17 @@ class _TechContainerState extends State<TechContainer> {
         ),
       ),
     );
+
+    if (!isBrutal) {
+      card = TiltCard(
+        maxTilt: widget.showHoverEffect ? 5 : 0,
+        hoverLift: widget.showHoverEffect ? 8 : 0,
+        glareColor: widget.showHoverEffect ? const Color(0x1AFFFFFF) : null,
+        borderRadius: BorderRadius.circular(widget.borderRadius),
+        child: card,
+      );
+    }
+    return card;
   }
 }
 

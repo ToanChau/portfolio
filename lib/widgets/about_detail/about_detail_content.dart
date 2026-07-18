@@ -12,8 +12,8 @@ class AboutDetailContent extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.end,
       crossAxisAlignment: context.isDesktopBreakPoint ? CrossAxisAlignment.start : CrossAxisAlignment.center,
       children: [
-        "Flutter Developer".typo({Typo.color(context.color.neutral.text.primary), context.heading3Semibold}),
-        "I'm a passionate Flutter developer with a strong foundation in Clean Architecture and BLoC pattern. I love building beautiful, scalable mobile applications that provide great user experiences."
+        S.of(context).flutter_developer.typo({Typo.color(context.color.neutral.text.primary), context.heading3Semibold}),
+        S.of(context).about_description
             .typo({Typo.color(context.color.neutral.text.primary), context.paragraph1Regular, Typo.clip}),
         InfoGroup(),
       ],
@@ -28,9 +28,9 @@ class InfoGroup extends StatelessWidget {
   Widget build(BuildContext context) {
     final infoItems = [
       InfoItem(
-        label: "Tan Phu, Ho Chi Minh City, Vietnam",
+        label: S.of(context).address,
         icon: Assets.svg.icLocation,
-        link: "https://maps.app.goo.gl/2q1i7N4U2rPJSU6x9",
+        link: "https://www.google.com/maps/search/?api=1&query=Thu+Duc,+Ho+Chi+Minh+City,+Vietnam",
       ),
       InfoItem(label: "+84 941 544 797", icon: Assets.svg.icPhone, link: "tel:0941544797"),
       InfoItem(label: "toanpl060@gmail.com", icon: Assets.svg.icMail, link: "mailto:toanpl060@gmail.com"),

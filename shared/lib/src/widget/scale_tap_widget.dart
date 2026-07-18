@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:shared/src/theme/color/color.dart';
 
 class ScaleTapWidget extends StatefulWidget {
   final Widget child;
@@ -12,7 +11,7 @@ class ScaleTapWidget extends StatefulWidget {
   ScaleTapWidget({
     required this.child,
     this.onTap,
-    this.hoverColor=ColorPrimitive.cyan700 ,
+    this.hoverColor,
     this.scaleHover = 1.05,
     this.scaleTap = 0.95,
     this.duration = const Duration(milliseconds: 200),
@@ -39,7 +38,7 @@ class _ScaleTapWidgetState extends State<ScaleTapWidget> with SingleTickerProvid
         : (_isHovered ? widget.scaleHover : 1.0);
 
     return MouseRegion(
-      cursor: SystemMouseCursors.click,
+      cursor: widget.onTap != null ? SystemMouseCursors.click : MouseCursor.defer,
       onEnter: (_) => setState(() => _isHovered = true),
       onExit: (_) => setState(() => _isHovered = false),
       child: GestureDetector(

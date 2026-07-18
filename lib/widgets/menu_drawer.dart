@@ -7,19 +7,19 @@ import 'package:shared/shared.dart';
 enum HeaderMenu {
   home,
   about,
+  experience,
   skills,
   project,;
   // education,
-  // experience,
   // contact;
 
-  String get label => switch (this) {
-    HeaderMenu.home => "Home",
-    HeaderMenu.about => "About",
-    HeaderMenu.skills => "Skills",
-    HeaderMenu.project => "Project",
+  String label(BuildContext context) => switch (this) {
+    HeaderMenu.home => S.of(context).menu_home,
+    HeaderMenu.about => S.of(context).menu_about,
+    HeaderMenu.experience => S.of(context).menu_experience,
+    HeaderMenu.skills => S.of(context).menu_skills,
+    HeaderMenu.project => S.of(context).menu_projects,
     // HeaderMenu.education => "Education",
-    // HeaderMenu.experience => "Experience",
     // HeaderMenu.contact => "Contact",
   };
 }
@@ -32,8 +32,14 @@ class MenuDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isBrutal = context.isBrutal;
     return Drawer(
-      backgroundColor: context.color.neutral.surface.page,
+      backgroundColor: isBrutal ? BrutalColors.cream : context.color.neutral.surface.page,
+      shape: isBrutal
+          ? const RoundedRectangleBorder(
+              side: BorderSide(color: BrutalColors.ink, width: 3),
+            )
+          : null,
       child: Container(
         padding: EdgeInsets.symmetric(
           horizontal: context.padding128_32_16,
@@ -65,7 +71,7 @@ class MenuDrawer extends StatelessWidget {
               children: HeaderMenu.values
                   .map(
                     (e) => MenuTap(
-                      content: menuContent(e),
+                      content: e.label(context),
                       active: menu == e,
                       onTap: () {
                         onMenuTap?.call(e);
@@ -124,17 +130,6 @@ class MenuDrawer extends StatelessWidget {
     );
   }
 
-  String menuContent(HeaderMenu menu) {
-    return switch (menu) {
-      HeaderMenu.home => "Home",
-      HeaderMenu.about => "About",
-      // HeaderMenu.contact=>"Contact",
-      // HeaderMenu.education=>"Education",
-      // HeaderMenu.experience=> "Experience",
-      HeaderMenu.project=>"Project",
-      HeaderMenu.skills=>"Skills",
-    };
-  }
 
   // void _onOpenPage(BuildContext context, HeaderMenu e) {
   //   switch (e) {
