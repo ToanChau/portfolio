@@ -16,10 +16,10 @@ class _HomeState extends State<Home> {
   final Map<HeaderMenu, GlobalKey> _sectionKeys = {
     HeaderMenu.home: GlobalKey(),
     HeaderMenu.about: GlobalKey(),
+    HeaderMenu.experience: GlobalKey(),
     HeaderMenu.skills: GlobalKey(),
     HeaderMenu.project: GlobalKey(),
     // HeaderMenu.education: GlobalKey(),
-    // HeaderMenu.experience: GlobalKey(),
     // HeaderMenu.contact: GlobalKey(),
   };
 
@@ -88,8 +88,9 @@ class _HomeState extends State<Home> {
     const approximateHeights = {
       0: 800.0,  // Home/About section
       1: 1200.0, // About Detail section
-      2: 1000.0, // Skills section
-      3: 1200.0, // Project section
+      2: 1400.0, // Experience section
+      3: 1000.0, // Skills section
+      4: 1200.0, // Project section
     };
 
     double targetOffset = 0;
@@ -107,13 +108,19 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
+    final content = _buildScroll(context);
     return Scaffold(
       drawer: !context.isDesktopBreakPoint
           ? MenuDrawer(menu: _currentMenu ?? HeaderMenu.home, onMenuTap: _scrollToSection)
           : null,
-      body: AnimatedBackground(
-        enableSpotlight: false,
-        child: SafeArea(
+      body: context.isBrutal
+          ? BrutalBackground(child: content)
+          : AnimatedBackground(enableSpotlight: false, child: content),
+    );
+  }
+
+  Widget _buildScroll(BuildContext context) {
+    return SafeArea(
           child: CustomScrollView(
             controller: _scrollController,
             slivers: [
@@ -132,29 +139,40 @@ class _HomeState extends State<Home> {
                     case 1:
                       return Container(
                         key: _sectionKeys[HeaderMenu.about],
-                        child: AboutDetailPage(),
+                        child: RevealOnScroll(child: AboutDetailPage()),
                       ).marginOnly(bottom: context.gap80_64_40);
                     case 2:
                       return Container(
-                        key: _sectionKeys[HeaderMenu.skills],
-                        child: SkillSectionPage().marginOnly(bottom: context.gap80_64_40),
+                        key: _sectionKeys[HeaderMenu.experience],
+                        child: RevealOnScroll(
+                          child: ExperienceSectionPage(),
+                        ).marginOnly(bottom: context.gap80_64_40),
                       );
                     case 3:
                       return Container(
-                        key: _sectionKeys[HeaderMenu.project],
-                        child: ProjectSectionPage().marginOnly(bottom: context.gap80_64_40),
+                        key: _sectionKeys[HeaderMenu.skills],
+                        child: RevealOnScroll(
+                          child: SkillSectionPage(),
+                        ).marginOnly(bottom: context.gap80_64_40),
                       );
+                    case 4:
+                      return Container(
+                        key: _sectionKeys[HeaderMenu.project],
+                        child: RevealOnScroll(
+                          child: ProjectSectionPage(),
+                        ).marginOnly(bottom: context.gap80_64_40),
+                      );
+                    case 5:
+                      return Footer(onMenuTap: _scrollToSection);
                     default:
                       return SizedBox.shrink();
                   }
                 },
-                itemCount: 4,
+                itemCount: 6,
               ),
             ],
           ),
-        ),
-      ),
-    );
+        );
   }
 
   @override

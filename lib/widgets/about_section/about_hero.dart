@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:resource/resource.dart';
+import 'package:shared/shared.dart';
 
 class AboutHero extends StatefulWidget {
   final String imagePath;
@@ -21,7 +22,6 @@ class _AboutHeroState extends State<AboutHero> with TickerProviderStateMixin {
   void initState() {
     super.initState();
     _ringController = AnimationController(duration: const Duration(seconds: 8), vsync: this)..repeat();
-
     _floatController = AnimationController(duration: const Duration(seconds: 3), vsync: this)..repeat(reverse: true);
   }
 
@@ -34,6 +34,9 @@ class _AboutHeroState extends State<AboutHero> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    final isBrutal = context.isBrutal;
+    final photoSize = widget.size - 40;
+
     return SizedBox(
       width: widget.size + 100,
       height: widget.size + 100,
@@ -41,29 +44,70 @@ class _AboutHeroState extends State<AboutHero> with TickerProviderStateMixin {
         clipBehavior: Clip.none,
         alignment: Alignment.center,
         children: [
-          AnimatedBuilder(
-            animation: _ringController,
-            builder: (context, child) {
-              return CustomPaint(
-                size: Size(widget.size + 40, widget.size + 40),
-                painter: _RingsPainter(
-                  rotation: _ringController.value * 2 * math.pi,
-                  gradientColors: const [Color(0xFF06B6D4), Color(0xFF14B8A6), Color(0xFF38BDF8)],
+          if (isBrutal) ...[
+            // Các ô màu xoay lệch phía sau ảnh
+            Transform.rotate(
+              angle: 7 * math.pi / 180,
+              child: Container(
+                width: photoSize,
+                height: photoSize,
+                decoration: BrutalDecoration.flatChip(
+                  color: BrutalColors.yellow,
+                  borderWidth: 3,
+                  radius: 24,
                 ),
-              );
-            },
-          ),
-
-          // Profile Image
-          Container(
-            width: widget.size - 40,
-            height: widget.size - 40,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: const Color(0xFF272C35),
-              image: DecorationImage(image: AssetImage(widget.imagePath), fit: BoxFit.fitHeight),
+              ),
             ),
-          ),
+            Transform.rotate(
+              angle: -5 * math.pi / 180,
+              child: Container(
+                width: photoSize,
+                height: photoSize,
+                decoration: BrutalDecoration.flatChip(
+                  color: BrutalColors.pink,
+                  borderWidth: 3,
+                  radius: 24,
+                ),
+              ),
+            ),
+            // Profile Image — khung vuông brutal
+            Container(
+              width: photoSize,
+              height: photoSize,
+              decoration: BoxDecoration(
+                color: BrutalColors.paper,
+                border: Border.all(color: BrutalColors.ink, width: 3),
+                borderRadius: BorderRadius.circular(24),
+                boxShadow: const [
+                  BoxShadow(color: BrutalColors.ink, offset: Offset(10, 10), blurRadius: 0),
+                ],
+                image: DecorationImage(image: AssetImage(widget.imagePath), fit: BoxFit.cover),
+              ),
+            ),
+          ] else ...[
+            // Classic: vòng tròn gradient xoay + ảnh tròn
+            AnimatedBuilder(
+              animation: _ringController,
+              builder: (context, child) {
+                return CustomPaint(
+                  size: Size(widget.size + 40, widget.size + 40),
+                  painter: _RingsPainter(
+                    rotation: _ringController.value * 2 * math.pi,
+                    gradientColors: const [Color(0xFF06B6D4), Color(0xFF14B8A6), Color(0xFF38BDF8)],
+                  ),
+                );
+              },
+            ),
+            Container(
+              width: photoSize,
+              height: photoSize,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: const Color(0xFF272C35),
+                image: DecorationImage(image: AssetImage(widget.imagePath), fit: BoxFit.fitHeight),
+              ),
+            ),
+          ],
 
           // Floating Cards
           ...widget.floatingCards.asMap().entries.map((entry) {
@@ -77,7 +121,7 @@ class _AboutHeroState extends State<AboutHero> with TickerProviderStateMixin {
   }
 }
 
-/// CustomPainter cho vòng tròn gradient
+/// CustomPainter cho vòng tròn gradient (classic design)
 class _RingsPainter extends CustomPainter {
   final double rotation;
   final List<Color> gradientColors;
@@ -169,7 +213,7 @@ class FloatingPosition {
   factory FloatingPosition.bottomRight(double bottom, double right) => FloatingPosition(bottom: bottom, right: right);
 }
 
-/// Floating Card với drag, flip và spring-back animation
+/// Floating Card với drag và spring-back animation
 class _FloatingCard extends StatefulWidget {
   final FloatingCardData data;
   final Animation<double> animation;
@@ -254,7 +298,9 @@ class _FloatingCardState extends State<_FloatingCard> with TickerProviderStateMi
           left: pos.left != double.infinity ? pos.left + _dragOffset.dx : null,
           right: pos.right != double.infinity ? pos.right - _dragOffset.dx : null,
           bottom: pos.bottom != double.infinity ? pos.bottom - bounceValue - _dragOffset.dy : null,
-          child: GestureDetector(
+          child: MouseRegion(
+            cursor: _isDragging ? SystemMouseCursors.grabbing : SystemMouseCursors.grab,
+            child: GestureDetector(
             onPanStart: _onPanStart,
             onPanUpdate: _onPanUpdate,
             onPanEnd: _onPanEnd,
@@ -263,24 +309,34 @@ class _FloatingCardState extends State<_FloatingCard> with TickerProviderStateMi
               duration: const Duration(milliseconds: 150),
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 150),
-                decoration: BoxDecoration(
-                  color: widget.data.backgroundColor ?? const Color(0xFF1E2128),
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(
-                    color: _isDragging ? const Color(0xFF06B6D4) : const Color(0xFF414651),
-                    width: _isDragging ? 2 : 1,
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: _isDragging ? const Color(0xFF06B6D4).withOpacity(0.3) : Colors.black.withOpacity(0.2),
-                      blurRadius: _isDragging ? 50 : 10,
-                      offset: const Offset(0, 4),
-                    ),
-                  ],
-                ),
+                decoration: context.isBrutal
+                    ? BrutalDecoration.card(
+                        color: _isDragging ? BrutalColors.yellow : (widget.data.backgroundColor ?? BrutalColors.paper),
+                        borderWidth: 2.5,
+                        radius: 10,
+                        shadowOffset: _isDragging ? const Offset(6, 6) : const Offset(4, 4),
+                      )
+                    : BoxDecoration(
+                        color: widget.data.backgroundColor ?? const Color(0xFF1E2128),
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(
+                          color: _isDragging ? const Color(0xFF06B6D4) : const Color(0xFF414651),
+                          width: _isDragging ? 2 : 1,
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: _isDragging
+                                ? const Color(0xFF06B6D4).withOpacity(0.3)
+                                : Colors.black.withOpacity(0.2),
+                            blurRadius: _isDragging ? 50 : 10,
+                            offset: const Offset(0, 4),
+                          ),
+                        ],
+                      ),
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                child: _buildFrontCard(),
+                child: _buildFrontCard(context),
               ),
+            ),
             ),
           ),
         );
@@ -288,7 +344,10 @@ class _FloatingCardState extends State<_FloatingCard> with TickerProviderStateMi
     );
   }
 
-  Widget _buildFrontCard() {
+  Widget _buildFrontCard(BuildContext context) {
+    final isBrutal = context.isBrutal;
+    final titleColor = isBrutal ? BrutalColors.ink : Colors.white;
+    final subtitleColor = isBrutal ? BrutalColors.inkSoft : Colors.white.withOpacity(0.6);
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -300,10 +359,10 @@ class _FloatingCardState extends State<_FloatingCard> with TickerProviderStateMi
           children: [
             Text(
               widget.data.title,
-              style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w600),
+              style: TextStyle(color: titleColor, fontSize: 14, fontWeight: isBrutal ? FontWeight.w700 : FontWeight.w600),
             ),
             if (widget.data.subtitle != null)
-              Text(widget.data.subtitle!, style: TextStyle(color: Colors.white.withOpacity(0.6), fontSize: 12)),
+              Text(widget.data.subtitle!, style: TextStyle(color: subtitleColor, fontSize: 12)),
           ],
         ),
       ],

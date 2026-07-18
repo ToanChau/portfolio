@@ -40,90 +40,92 @@ class SkillSectionPage extends StatelessWidget {
     ];
     final soft = [
       TechTagData(
-        label: 'Problem Solving',
+        label: S.of(context).skill_problem_solving,
         // icon: Assets.icons.react,
       ),
       TechTagData(
-        label: 'Communication',
+        label: S.of(context).skill_communication,
         // icon: Assets.icons.typescript,
       ),
       TechTagData(label: 'Agile/Scrum', icon: Assets.svg.icScrum),
     ];
+    final isBrutal = context.isBrutal;
     final mobileContainer = TechContainer(
-
-      title: "Mobile Development",
+      hoverColor: isBrutal ? BrutalColors.blue : const Color(0xFF06B6D4),
+      title: S.of(context).cat_mobile,
       icon: Assets.svg.icMobile,
       technologies: mobileTechs.map((e) => e).toList(),
     );
     final backendContainer = TechContainer(
-      hoverColor: const Color(0xFF21CF41),
-      title: "Backend Development",
+      hoverColor: isBrutal ? BrutalColors.green : const Color(0xFF21CF41),
+      title: S.of(context).cat_backend,
       icon: Assets.svg.icData,
       technologies: backendTechs.map((e) => e).toList(),
     );
     final toolAndDevOps = TechContainer(
-      hoverColor: const Color(0xFFF46936),
-
-      title: "Tools & DevOps",
+      hoverColor: isBrutal ? BrutalColors.orange : const Color(0xFFF46936),
+      title: S.of(context).cat_tools,
       icon: Assets.svg.icDocker,
       technologies: tools.map((e) => e).toList(),
     );
     final softSkills = TechContainer(
-      hoverColor: const Color(0xFF8D37C6),
-      title: "Soft Skills",
+      hoverColor: isBrutal ? BrutalColors.purple : const Color(0xFF8D37C6),
+      title: S.of(context).cat_soft,
       icon: Assets.svg.icNotification,
       technologies: soft.map((e) => e).toList(),
     );
-    final tablet = IntrinsicHeight(
-      child: Row(
-        spacing: context.gap24_16_12,
-        children: [
-          Expanded(
-            child: Column(
-              spacing: context.gap24_16_12,
-              children: [
-                Flexible(child: mobileContainer),
-                Flexible(child: backendContainer),
-              ],
-            ),
+    final tablet = Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      spacing: context.gap24_16_12,
+      children: [
+        Expanded(
+          child: Column(
+            spacing: context.gap24_16_12,
+            children: [
+              mobileContainer,
+              backendContainer,
+            ],
           ),
-          Expanded(
-            child: Column(
-              spacing: context.gap24_16_12,
-              children: [
-                Flexible(child: toolAndDevOps),
-                Flexible(child: softSkills),
-              ],
-            ),
+        ),
+        Expanded(
+          child: Column(
+            spacing: context.gap24_16_12,
+            children: [
+              toolAndDevOps,
+              softSkills,
+            ],
           ),
-        ],
-      ),
+        ),
+      ],
     );
-    final desktop = IntrinsicHeight(
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        mainAxisSize: MainAxisSize.max,
-        spacing: context.gap24_16_12,
-        children: [
-          Expanded(child: mobileContainer),
-          Expanded(child: backendContainer),
-          Expanded(child: toolAndDevOps),
-          Expanded(child: softSkills),
-        ],
-      ),
+    // Không dùng IntrinsicHeight + stretch: Wrap báo sai intrinsic height nên
+    // chip cuối ("Android Studio") tràn ra ngoài card. Để card tự cao theo nội dung.
+    final desktop = Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.max,
+      spacing: context.gap24_16_12,
+      children: [
+        Expanded(child: mobileContainer),
+        Expanded(child: backendContainer),
+        Expanded(child: toolAndDevOps),
+        Expanded(child: softSkills),
+      ],
     );
 
     return Container(
       padding: EdgeInsets.symmetric(vertical: context.padding48_32_24, horizontal: context.padding128_80_64),
       child: Column(
         children: [
-          SectionTag(text: "Skills").marginOnly(bottom: context.gap12_04_04),
-          "Technical Expertise"
+          SectionTag(text: S.of(context).tag_skills).marginOnly(bottom: context.gap12_04_04),
+          S.of(context).technical_expertise
               .typo({context.heading3Semibold, Typo.color(context.color.neutral.text.primary)})
               .marginOnly(bottom: context.gap12_04_04),
 
-          "Technologies and tools I work with"
-              .typo({context.heading6Light, Typo.color(context.color.neutral.text.quaternary)})
+          S.of(context).skills_subtitle
+              .typo({
+                context.heading6Light,
+                Typo.color(isBrutal ? BrutalColors.inkSoft : context.color.neutral.text.quaternary)
+              })
               .marginOnly(bottom: context.gap80_64_40),
           ResponsiveWidget(
             onCheckAutoLayout: (constrain) => constrain.maxWidth < 825,
