@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:resource/resource.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../theme/brutal.dart';
+import '../theme/design_mode.dart';
+import 'tilt_card.dart';
+
 /// Data class cho Project Card
 class ProjectCardData {
   final String title;
@@ -127,41 +131,50 @@ class _ProjectCardState extends State<ProjectCard> {
 
   @override
   Widget build(BuildContext context) {
-    final defaultBgColor = const Color(0xFF1A1F28);
-    final defaultBorderColor = const Color(0xFF414651);
-    final defaultHoverColor = const Color(0xFF06B6D4);
+    final isBrutal = context.isBrutal;
+    final defaultHoverColor = isBrutal ? BrutalColors.blue : const Color(0xFF06B6D4);
+    final accent = widget.hoverColor ?? defaultHoverColor;
+    final lifted = _isHovered && widget.showHoverEffect;
 
-    return MouseRegion(
+    Widget card = MouseRegion(
       onEnter: (_) => setState(() => _isHovered = true),
       onExit: (_) => setState(() => _isHovered = false),
       child: AnimatedContainer(
-        duration: const Duration(milliseconds: 300),
-        decoration: BoxDecoration(
-          color: widget.backgroundColor ?? defaultBgColor,
-          border: Border.all(
-            color: _isHovered && widget.showHoverEffect
-                ? (widget.hoverColor ?? defaultHoverColor)
-                : (widget.borderColor ?? defaultBorderColor),
-            width: widget.borderWidth,
-          ),
-          borderRadius: BorderRadius.circular(widget.borderRadius),
-          boxShadow: _isHovered && widget.showHoverEffect
-              ? [
-            BoxShadow(
-              color: (widget.hoverColor ?? defaultHoverColor)
-                  .withOpacity(0.2),
-              blurRadius: 20,
-              offset: const Offset(0, 8),
-            ),
-          ]
-              : [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.2),
-              blurRadius: 10,
-              offset: const Offset(0, 4),
-            ),
-          ],
-        ),
+        duration: Duration(milliseconds: isBrutal ? 150 : 300),
+        curve: Curves.easeOut,
+        transform: Matrix4.translationValues(
+            isBrutal && lifted ? -3 : 0, isBrutal && lifted ? -3 : 0, 0),
+        decoration: isBrutal
+            ? BrutalDecoration.card(
+                color: widget.backgroundColor ?? BrutalColors.paper,
+                borderWidth: 3,
+                radius: widget.borderRadius,
+                shadowOffset: lifted ? const Offset(10, 10) : const Offset(7, 7),
+              )
+            : BoxDecoration(
+                color: widget.backgroundColor ?? const Color(0xFF1A1F28),
+                border: Border.all(
+                  color: lifted ? accent : (widget.borderColor ?? const Color(0xFF414651)),
+                  width: widget.borderWidth,
+                ),
+                borderRadius: BorderRadius.circular(widget.borderRadius),
+                boxShadow: lifted
+                    ? [
+                        BoxShadow(
+                          color: accent.withOpacity(0.35),
+                          blurRadius: 40,
+                          spreadRadius: -4,
+                          offset: const Offset(0, 18),
+                        ),
+                      ]
+                    : [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.2),
+                          blurRadius: 10,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
+              ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -183,32 +196,33 @@ class _ProjectCardState extends State<ProjectCard> {
                             horizontal: 8,
                             vertical: 4,
                           ),
-                          decoration: BoxDecoration(
-                            color: (widget.badgeColor ?? defaultHoverColor)
-                                .withOpacity(0.2),
-                            border: Border.all(
-                              color: widget.badgeColor ?? defaultHoverColor,
-                              width: 0.5,
-                            ),
-                            borderRadius: BorderRadius.circular(6),
-                          ),
+                          decoration: isBrutal
+                              ? BrutalDecoration.flatChip(
+                                  color: widget.badgeColor ?? BrutalColors.yellow,
+                                  borderWidth: 2,
+                                  radius: 6,
+                                )
+                              : BoxDecoration(
+                                  color: (widget.badgeColor ?? accent).withOpacity(0.2),
+                                  border: Border.all(color: widget.badgeColor ?? accent, width: 0.5),
+                                  borderRadius: BorderRadius.circular(6),
+                                ),
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Icon(
                                 Icons.star,
                                 size: 12,
-                                color: widget.badgeColor ?? defaultHoverColor,
+                                color: isBrutal ? BrutalColors.ink : (widget.badgeColor ?? accent),
                               ),
                               const SizedBox(width: 4),
                               Flexible(
                                 child: Text(
                                   widget.badge!,
                                   style: TextStyle(
-                                    color:
-                                    widget.badgeColor ?? defaultHoverColor,
+                                    color: isBrutal ? BrutalColors.ink : (widget.badgeColor ?? accent),
                                     fontSize: 11,
-                                    fontWeight: FontWeight.w600,
+                                    fontWeight: isBrutal ? FontWeight.w700 : FontWeight.w600,
                                   ),
                                 ),
                               ),
@@ -220,10 +234,10 @@ class _ProjectCardState extends State<ProjectCard> {
                       Expanded(
                         child: Text(
                           widget.title,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 18,
-                            fontWeight: FontWeight.w600,
+                          style: TextStyle(
+                            color: isBrutal ? BrutalColors.ink : Colors.white,
+                            fontSize: isBrutal ? 19 : 18,
+                            fontWeight: isBrutal ? FontWeight.w700 : FontWeight.w600,
                           ),
                         ),
                       ),
@@ -236,7 +250,7 @@ class _ProjectCardState extends State<ProjectCard> {
                   Text(
                     widget.description,
                     style: TextStyle(
-                      color: Colors.white.withOpacity(0.7),
+                      color: isBrutal ? BrutalColors.inkSoft : Colors.white.withOpacity(0.7),
                       fontSize: 14,
                       height: 1.5,
                     ),
@@ -256,20 +270,23 @@ class _ProjectCardState extends State<ProjectCard> {
                           horizontal: 10,
                           vertical: 6,
                         ),
-                        decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.05),
-                          border: Border.all(
-                            color: Colors.white.withOpacity(0.1),
-                            width: 0.5,
-                          ),
-                          borderRadius: BorderRadius.circular(6),
-                        ),
+                        decoration: isBrutal
+                            ? BrutalDecoration.flatChip(
+                                color: BrutalColors.cream,
+                                borderWidth: 1.5,
+                                radius: 6,
+                              )
+                            : BoxDecoration(
+                                color: Colors.white.withOpacity(0.05),
+                                border: Border.all(color: Colors.white.withOpacity(0.1), width: 0.5),
+                                borderRadius: BorderRadius.circular(6),
+                              ),
                         child: Text(
                           tech,
                           style: TextStyle(
-                            color: Colors.white.withOpacity(0.7),
+                            color: isBrutal ? BrutalColors.ink : Colors.white.withOpacity(0.7),
                             fontSize: 12,
-                            fontWeight: FontWeight.w500,
+                            fontWeight: isBrutal ? FontWeight.w600 : FontWeight.w500,
                           ),
                         ),
                       );
@@ -291,17 +308,79 @@ class _ProjectCardState extends State<ProjectCard> {
         ),
       ),
     );
+
+    if (!isBrutal) {
+      card = TiltCard(
+        maxTilt: widget.showHoverEffect ? 6 : 0,
+        hoverLift: widget.showHoverEffect ? 12 : 0,
+        glareColor: widget.showHoverEffect ? const Color(0x1FFFFFFF) : null,
+        borderRadius: BorderRadius.circular(widget.borderRadius),
+        child: card,
+      );
+    }
+    return card;
   }
 
   Widget _buildImageHeader(Color defaultHoverColor) {
+    final isBrutal = context.isBrutal;
+    final accent = widget.hoverColor ?? defaultHoverColor;
+
+    if (!isBrutal) {
+      return Container(
+        height: widget.imageHeight,
+        width: double.infinity,
+        decoration: BoxDecoration(
+          color: Colors.black.withOpacity(0.3),
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(widget.borderRadius),
+            topRight: Radius.circular(widget.borderRadius),
+          ),
+        ),
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            if (widget.imagePath != null)
+              Image.asset(
+                widget.imagePath!,
+                fit: BoxFit.contain,
+                width: double.infinity,
+                height: double.infinity,
+              )
+            else
+              Container(color: Colors.black.withOpacity(0.5)),
+            if (widget.icon != null)
+              Container(
+                width: widget.iconSize + 20,
+                height: widget.iconSize + 20,
+                decoration: BoxDecoration(
+                  color: accent.withOpacity(0.15),
+                  border: Border.all(color: accent.withOpacity(0.3), width: 1),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Center(
+                  child: widget.icon!.svg(
+                    width: widget.iconSize,
+                    height: widget.iconSize,
+                    colorFilter: ColorFilter.mode(accent, BlendMode.srcIn),
+                  ),
+                ),
+              ),
+          ],
+        ),
+      );
+    }
+
     return Container(
       height: widget.imageHeight,
       width: double.infinity,
       decoration: BoxDecoration(
-        color: Colors.black.withOpacity(0.3),
+        color: accent,
         borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(widget.borderRadius),
-          topRight: Radius.circular(widget.borderRadius),
+          topLeft: Radius.circular(widget.borderRadius - 3),
+          topRight: Radius.circular(widget.borderRadius - 3),
+        ),
+        border: const Border(
+          bottom: BorderSide(color: BrutalColors.ink, width: 3),
         ),
       ),
       child: Stack(
@@ -309,15 +388,14 @@ class _ProjectCardState extends State<ProjectCard> {
         children: [
           // Background Image
           if (widget.imagePath != null)
-            Image.asset(
-              widget.imagePath!,
-              fit: BoxFit.contain,
-              width: double.infinity,
-              height: double.infinity,
-            )
-          else
-            Container(
-              color: Colors.black.withOpacity(0.5),
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: Image.asset(
+                widget.imagePath!,
+                fit: BoxFit.contain,
+                width: double.infinity,
+                height: double.infinity,
+              ),
             ),
 
           // Icon Overlay
@@ -325,20 +403,17 @@ class _ProjectCardState extends State<ProjectCard> {
             Container(
               width: widget.iconSize + 20,
               height: widget.iconSize + 20,
-              decoration: BoxDecoration(
-                color: defaultHoverColor.withOpacity(0.15),
-                border: Border.all(
-                  color: defaultHoverColor.withOpacity(0.3),
-                  width: 1,
-                ),
-                borderRadius: BorderRadius.circular(12),
+              decoration: BrutalDecoration.flatChip(
+                color: BrutalColors.paper,
+                borderWidth: 2,
+                radius: 12,
               ),
               child: Center(
                 child: widget.icon!.svg(
                   width: widget.iconSize,
                   height: widget.iconSize,
-                  colorFilter: ColorFilter.mode(
-                    defaultHoverColor,
+                  colorFilter: const ColorFilter.mode(
+                    BrutalColors.ink,
                     BlendMode.srcIn,
                   ),
                 ),
@@ -408,9 +483,10 @@ class _ActionButtonState extends State<_ActionButton> {
 
   @override
   Widget build(BuildContext context) {
+    final isBrutal = context.isBrutal;
     final hasAction = widget.link != null || widget.onTap != null;
-    final defaultBgColor = const Color(0xFF06B6D4);
-    final defaultTextColor = Colors.white;
+    final defaultBgColor = isBrutal ? BrutalColors.yellow : const Color(0xFF06B6D4);
+    final defaultTextColor = isBrutal ? BrutalColors.ink : Colors.white;
 
     return MouseRegion(
       onEnter: (_) => setState(() => _isHovered = true),
@@ -419,15 +495,24 @@ class _ActionButtonState extends State<_ActionButton> {
       child: GestureDetector(
         onTap: hasAction ? _handleTap : null,
         child: AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
+          duration: Duration(milliseconds: isBrutal ? 120 : 200),
+          curve: Curves.easeOut,
+          transform: Matrix4.translationValues(
+              isBrutal && _isHovered ? 2 : 0, isBrutal && _isHovered ? 2 : 0, 0),
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-          decoration: BoxDecoration(
-            color: _isHovered
-                ? (widget.backgroundColor ?? defaultBgColor)
-                .withOpacity(0.9)
-                : (widget.backgroundColor ?? defaultBgColor),
-            borderRadius: BorderRadius.circular(8),
-          ),
+          decoration: isBrutal
+              ? BrutalDecoration.card(
+                  color: widget.backgroundColor ?? defaultBgColor,
+                  borderWidth: 2,
+                  radius: 8,
+                  shadowOffset: _isHovered ? const Offset(1, 1) : const Offset(3, 3),
+                )
+              : BoxDecoration(
+                  color: _isHovered
+                      ? (widget.backgroundColor ?? defaultBgColor).withOpacity(0.9)
+                      : (widget.backgroundColor ?? defaultBgColor),
+                  borderRadius: BorderRadius.circular(8),
+                ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [

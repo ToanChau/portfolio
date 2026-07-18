@@ -6,18 +6,17 @@ class Logo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isBrutal = context.isBrutal;
     return "ToanChau".typo({
       FontFamilyTypo("MeowScript"),
       Typo.w700,
       Typo.size(40),
-      Typo.color(context.color.brand.text.enable),
+      Typo.color(isBrutal ? BrutalColors.ink : context.color.brand.text.enable),
       ShadowsTypo([
-        Shadow(
-          color: context.color.brand.text.enable.withOpacity(0.8),
-          blurRadius: 1,
-        ),
-      ]
-      )
+        isBrutal
+            ? const Shadow(color: BrutalColors.yellow, offset: Offset(2.5, 2.5))
+            : Shadow(color: context.color.brand.text.enable.withOpacity(0.8), blurRadius: 1),
+      ])
     });
   }
 }

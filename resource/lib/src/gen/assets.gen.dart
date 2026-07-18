@@ -30,6 +30,16 @@ class $AssetsEnvGen {
   List<String> get values => [envDev, envProd, envStaging];
 }
 
+class $AssetsPdfGen {
+  const $AssetsPdfGen();
+
+  /// File path: assets/pdf/ChauDucToan_Flutter_CV.pdf
+  String get chauDucToanFlutterCV => 'assets/pdf/ChauDucToan_Flutter_CV.pdf';
+
+  /// List of all assets
+  List<String> get values => [chauDucToanFlutterCV];
+}
+
 class $AssetsPngGen {
   const $AssetsPngGen();
 
@@ -85,6 +95,9 @@ class $AssetsSvgGen {
 
   /// File path: assets/svg/ic_docker.svg
   SvgGenImage get icDocker => const SvgGenImage('assets/svg/ic_docker.svg');
+
+  /// File path: assets/svg/ic_download.svg
+  SvgGenImage get icDownload => const SvgGenImage('assets/svg/ic_download.svg');
 
   /// File path: assets/svg/ic_figma.svg
   SvgGenImage get icFigma => const SvgGenImage('assets/svg/ic_figma.svg');
@@ -157,6 +170,7 @@ class $AssetsSvgGen {
     icDart,
     icData,
     icDocker,
+    icDownload,
     icFigma,
     icFirebase,
     icFlask,
@@ -184,6 +198,7 @@ class Assets {
   const Assets._();
 
   static const $AssetsEnvGen env = $AssetsEnvGen();
+  static const $AssetsPdfGen pdf = $AssetsPdfGen();
   static const $AssetsPngGen png = $AssetsPngGen();
   static const $AssetsSvgGen svg = $AssetsSvgGen();
 }

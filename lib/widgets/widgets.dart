@@ -1,8 +1,14 @@
 export 'main_header.dart';
 export 'animated_background.dart';
+export 'brutal_background.dart';
 export 'menu_drawer.dart';
+export 'footer.dart';
+export 'design_toggle.dart';
+export 'lang_toggle.dart';
+export 'locale_scope.dart';
 export 'logo.dart';
 export 'about_section/about_section.dart';
 export 'about_detail/about_detail_page.dart';
 export 'skills_section/skill_section.dart';
+export 'experience_section/experience_section_page.dart';
 export 'project_section/project_section.dart';

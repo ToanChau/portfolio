@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:resource/resource.dart';
 
+import '../theme/brutal.dart';
+import '../theme/design_mode.dart';
+
 /// Data class cho Info Item
 class InfoItemData {
   final SvgGenImage? icon;
@@ -93,8 +96,9 @@ class _InfoItemState extends State<InfoItem> {
   @override
   Widget build(BuildContext context) {
     final hasAction = widget.link != null || widget.onTap != null;
-    final defaultTextColor = Colors.white.withOpacity(0.8);
-    final defaultHoverColor = const Color(0xFF06B6D4);
+    final defaultTextColor =
+        context.isBrutal ? BrutalColors.inkSoft : Colors.white.withOpacity(0.8);
+    final defaultHoverColor = context.isBrutal ? BrutalColors.orange : const Color(0xFF06B6D4);
 
     return MouseRegion(
       onEnter: (_) => setState(() => _isHovered = true),
